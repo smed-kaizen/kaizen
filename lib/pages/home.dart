@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
                           icon: Icons.done,
-                          label: 'Share',
+                          // label: 'done',
                         ),
                       ],
                     ),
@@ -98,12 +98,23 @@ class _HomeState extends State<Home> {
         ),
         floatingActionButton: IconButton(
           icon: Icon(Icons.add),
-          onPressed: () => {},
+          onPressed: () {
+            _showAddTaskBottomModal(context);
+          },
           color: Colors.red
         ),
       ),
     );
   }
+}
+
+void _showAddTaskBottomModal(context) {
+  showModalBottomSheet(context: context, builder: (BuildContext bc) {
+    return Container(
+      height: MediaQuery.of(context).size.height * .60,
+      child: Text('MAMA')
+    );
+  });
 }
 
 class Task {
