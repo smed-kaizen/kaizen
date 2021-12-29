@@ -13,10 +13,11 @@ class Todo {
     this.id,
     required this.task,
     required this.difficulty,
-    required this.createdAt,
-    required this.isDone,
+    createdAt,
+    isDone,
     this.description
-  });
+  }): createdAt = createdAt ?? DateTime.now(),
+      isDone = isDone ?? false;
 
   Map<String, Object?> toMap() {
     var map = <String, Object?>{

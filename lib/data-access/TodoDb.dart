@@ -28,7 +28,7 @@ class TodoDbProvider {
   }
 
   /// Create a todo
-  Future<Todo> createTodo(Todo todo) async {
+  Future<Todo> saveTodo(Todo todo) async {
     int todoId = await db.insert('todos', todo.toMap());
     todo.id = todoId;
     return todo;

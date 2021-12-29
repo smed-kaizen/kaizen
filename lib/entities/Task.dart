@@ -8,10 +8,11 @@ class Task {
   Task({
     this.id,
     required this.name,
-    required this.createdAt,
-    required this.isFavorite,
+    createdAt,
+    isFavorite,
     this.deletedAt
-  });
+  }): createdAt = createdAt ?? DateTime.now(),
+        isFavorite = isFavorite ?? false;
 
   Map<String, Object?> toMap() {
     var map = <String, Object?>{

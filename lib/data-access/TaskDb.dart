@@ -21,6 +21,15 @@ class TaskDbProvider {
     return tasks.map((task) => Task.fromMap(task)).toList();
   }
 
+  /// get a task by name
+  Future<Task?> getTaskByName (String name) async {
+    List<Map<String, Object?>> tasks = await db.query('tasks', where: 'name=?', whereArgs: [name], limit: 1);
+    if (tasks.length == 0) {
+      return null;
+    }
+    return tasks.map((task) => Task.fromMap(task)).single;
+  }
+
   /// create a task
   Future<Task> createTask (Task task) async {
     int taskId = await db.insert('tasks', task.toMap());
