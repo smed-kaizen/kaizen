@@ -8,16 +8,12 @@ class TaskDbProvider {
   /// Get the tasks that are like the provided name
   Future<List<Task>> getTasksLike (String name) async {
     List<Map<String, Object?>> tasks = await db.query('tasks', where: "name LIKE ?", whereArgs: ['%$name%'], limit: 3);
-    print({'tests like', name, 'are: ', tasks});
-
     return tasks.map((task) => Task.fromMap(task)).toList();
   }
 
   /// Get favorite tasks
   Future<List<Task>> getFavoriteTasks () async {
     List<Map<String, Object?>> tasks = await db.query('tasks', where: 'isFavorite=TRUE');
-    print({'tasks favorite are: ', tasks});
-
     return tasks.map((task) => Task.fromMap(task)).toList();
   }
 

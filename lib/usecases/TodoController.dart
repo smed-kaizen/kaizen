@@ -3,6 +3,7 @@ import 'package:kaizen/data-access/TodoDb.dart';
 import 'package:kaizen/entities/Difficulty.dart';
 import 'package:kaizen/entities/Task.dart';
 import 'package:kaizen/entities/Todo.dart';
+import 'package:kaizen/logger/CustomLogger.dart';
 
 class TodoController {
   TaskDbProvider _taskDbProvider;
@@ -37,7 +38,7 @@ class TodoController {
 
       return newTodo;
     } catch (e) {
-      print({'error Adding todo', e});
+      CustomLogger.logger.e('Failed to add todo', e);
       throw e;
     }
   }
@@ -46,7 +47,7 @@ class TodoController {
     try {
       return _todoDbProvider.getTodosOfToday();
     } catch (e) {
-      print({'Failed to get todos of today', e});
+      CustomLogger.logger.e('Failed to get Todos of today', e);
       throw e;
     }
   }
@@ -56,7 +57,7 @@ class TodoController {
       todo = await _todoDbProvider.markTodoAsDone(todo, done);
       return todo;
     } catch(e) {
-      print({'Failed to mark todo as done:', done, e});
+      CustomLogger.logger.e('Failed to mark Todo as done: $done', e);
       throw e;
     }
   }

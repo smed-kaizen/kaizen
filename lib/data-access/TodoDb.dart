@@ -1,4 +1,5 @@
 import 'package:kaizen/entities/Todo.dart';
+import 'package:kaizen/logger/CustomLogger.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TodoDbProvider {
@@ -22,7 +23,7 @@ class TodoDbProvider {
         todos.createdAt BETWEEN strftime('%Y-%m-%d %H:%M:%S', 'now', 'start of day') AND strftime('%Y-%m-%d %H:%M:%S', 'now', '+1 day', 'start of day');
     ''');
 
-    print({'Todos of today', todos});
+    CustomLogger.logger.d({'Todos of today', todos});
 
     return todos.map((todo) => Todo.fromMap(todo)).toList();
   }
@@ -46,6 +47,6 @@ class TodoDbProvider {
   /// delete a todo.
   Future<void> deleteTodo(Todo todo) async {
     int deleted = await db.delete('todo', where: 'id = ?', whereArgs: [todo.id!]);
-    print({'deleted row', deleted});
+    CustomLogger.logger.d({'Deleted row', deleted});
   }
 }

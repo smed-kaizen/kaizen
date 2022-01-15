@@ -1,5 +1,6 @@
 import 'package:kaizen/data-access/TaskDb.dart';
 import 'package:kaizen/entities/Task.dart';
+import 'package:kaizen/logger/CustomLogger.dart';
 
 
 class TaskController {
@@ -11,7 +12,7 @@ class TaskController {
     try {
       return _taskDbProvider.getTasksLike(name);
     } catch (e) {
-      print({'Failed to get Tasks that are like', name, 'reason:', e});
+      CustomLogger.logger.e('Failed to get Tasks that are like $name', e);
       throw e;
     }
   }

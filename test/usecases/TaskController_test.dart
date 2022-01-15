@@ -1,5 +1,6 @@
 import 'package:kaizen/data-access/TaskDb.dart';
 import 'package:kaizen/entities/Task.dart';
+import 'package:kaizen/logger/CustomLogger.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:test/test.dart';
 import '../mixins/TestApi.dart';
@@ -20,9 +21,9 @@ void main () {
   setUp(() async {
     db = await TestDbProvider.getDbConnection();
     expect(db.isOpen, true);
-    print('inserting the taks');
+    CustomLogger.logger.d('Inserting the Tasks');
     await insertTasks();
-    print('tasks inserted');
+    CustomLogger.logger.d('Tasks are inserted');
     await TestApi.init();
   });
 

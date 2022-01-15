@@ -1,5 +1,6 @@
 import 'package:kaizen/data-access/DifficultyDb.dart';
 import 'package:kaizen/entities/Difficulty.dart';
+import 'package:kaizen/logger/CustomLogger.dart';
 
 
 class DifficultyController {
@@ -11,7 +12,7 @@ class DifficultyController {
     try {
       return _difficultyDbProvider.getDifficulties();
     } catch (e) {
-      print({'Failed to get Difficulties reason:', e});
+      CustomLogger.logger.e('Failed to get difficulties', e);
       throw e;
     }
   }

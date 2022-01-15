@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:kaizen/logger/CustomLogger.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -15,7 +16,7 @@ class Provider {
 
   /// Creates a custom path for the db name if it doesn't exist
   static Future<String> getCustomDatabasesPath (String dbName) async {
-    print({'Creating the custom path for the db:', dbName});
+    CustomLogger.logger.d({'Creating the custom path for the db:', dbName});
 
     String databasesPath = await getDatabasesPath();
     String path = join(databasesPath, '$dbName.db');
@@ -30,7 +31,7 @@ class Provider {
 
   /// Creates the databases, the constraints and the triggers that we want in our db
   static onCreate (Database db, int version) async {
-    print('Creating the database');
+    CustomLogger.logger.d('Creating the database');
     // execute doesn't let you have multiple statements separated with ; so we create
     // multiple execute statements for each table.
     await db.execute('PRAGMA foreign_keys = ON');
@@ -130,7 +131,7 @@ class Provider {
       select * from sqlite_master where type = 'trigger'
     ''');
 
-    print({'triggers', triggers});
+    CustomLogger.logger.v({'triggers', triggers});
 
     // populate the difficulty data
     Batch batch = db.batch();
@@ -154,7 +155,7 @@ class Provider {
           version: 1,
           onCreate: onCreate,
           onOpen: (Database db) async {
-            print({ 'Database open in path: ', db.path });
+            CustomLogger.logger.i({ 'Database open in path: ', db.path });
           }
       );
     }
