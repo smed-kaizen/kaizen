@@ -13,13 +13,13 @@ const defaultDifficulties = <Map<String, Object>>[
 class Provider {
   static Database? _db;
 
+  /// Creates a custom path for the db name if it doesn't exist
   static Future<String> getCustomDatabasesPath (String dbName) async {
     print({'Creating the custom path for the db:', dbName});
 
     String databasesPath = await getDatabasesPath();
     String path = join(databasesPath, '$dbName.db');
 
-    print({'Creating the custom path for the db:', dbName});
     // Make sure the directory exists
     try {
       await Directory(databasesPath).create(recursive: true);
@@ -28,11 +28,14 @@ class Provider {
     return path;
   }
 
+  /// Creates the databases, the constraints and the triggers that we want in our db
   static onCreate (Database db, int version) async {
     print('Creating the database');
     // execute doesn't let you have multiple statements separated with ; so we create
     // multiple execute statements for each table.
     await db.execute('PRAGMA foreign_keys = ON');
+
+    // Create the Difficulties table
     await db.execute('''
       CREATE TABLE IF NOT EXISTS difficulties (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,6 +44,7 @@ class Provider {
       )
     ''');
 
+    // Create the Tasks table
     await db.execute('''
       CREATE TABLE IF NOT EXISTS tasks (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,6 +55,7 @@ class Provider {
       )
     ''');
 
+    // Creates the Todos Table with FK constraints
     await db.execute('''
       CREATE TABLE IF NOT EXISTS todos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -64,6 +69,7 @@ class Provider {
       )
     ''');
 
+    // Creating the progress Table
     await db.execute('''
       CREATE TABLE IF NOT EXISTS progress (
         experience INT
@@ -88,12 +94,12 @@ class Provider {
       END
     ''');
 
+    // Debugging the Triggers created
     var triggers = await db.rawQuery('''
       select * from sqlite_master where type = 'trigger'
     ''');
 
-    print('triggers');
-    print(triggers);
+    print({'triggers', triggers});
 
     // populate the difficulty data
     Batch batch = db.batch();
@@ -107,6 +113,7 @@ class Provider {
     await batch.commit(noResult: true);
   }
 
+  // Get the singleton of the db connection object
   static Future<Database> getDbConnection ({String dbName='kaizen.db'}) async {
     if (_db == null) {
       // String path = await getDatabasePath();
