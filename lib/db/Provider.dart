@@ -94,6 +94,37 @@ class Provider {
       END
     ''');
 
+    // Can not delete a done todo
+    await db.execute('''
+      CREATE TRIGGER IF NOT EXISTS shouldnt_delete_done_tdodo BEFORE DELETE ON
+      todos FOR EACH ROW WHEN (OLD.isDone = TRUE)
+      BEGIN
+        SELECT RAISE (FAIL, 'This todo is done, to delete it mark it as undone');
+      END
+    ''');
+
+    // Marking a todo as done will add experience of the difficulty
+    // CHECK IF THE UPDATE OF DIFFICULTY CAUSES THE USER TO EXCEED DAILY LIMIT
+    await db.execute('''
+      CREATE TRIGGER IF NOT EXISTS done_todo_adds_exp AFTER UPDATE of isDone ON
+      todos FOR EACH ROW WHEN (old.isDone=FALSE AND new.isDone=TRUE)
+      BEGIN
+        UPDATE progress
+          SET experience = experience + (SELECT pts FROM difficulties WHERE id=OLD.difficultyId);
+      END;
+    ''');
+
+    // Marking a todo as undone will subtract the according experience
+    // CHECK IF THE UPDATE OF DIFFICULTY CAUSES THE USER TO EXCEED DAILY LIMIT
+    await db.execute('''
+      CREATE TRIGGER IF NOT EXISTS done_todo_subtract_exp AFTER UPDATE of isDone ON
+      todos FOR EACH ROW WHEN (old.isDone=TRUE AND new.isDone=FALSE)
+      BEGIN
+        UPDATE progress
+          SET experience = experience - (SELECT pts FROM difficulties WHERE id=OLD.difficultyId);
+      END;
+    ''');
+
     // Debugging the Triggers created
     var triggers = await db.rawQuery('''
       select * from sqlite_master where type = 'trigger'

@@ -30,7 +30,6 @@ void main () {
     await db.delete('tasks');
   });
 
-
   group('Tasks searching', () {
     test('Getting the tasks using auto-complete and returns 3 results max', () async {
       List<Task> tasks = await TestApi.taskController.getTasksLike('tA');

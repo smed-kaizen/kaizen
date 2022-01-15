@@ -1,14 +1,24 @@
 import 'package:kaizen/db/Provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:path/path.dart';
 
 class TestDbProvider {
   static Database? _db;
 
   static Future<Database> getDbConnection ({String dbName='kaizen_test.db'}) async {
+    sqfliteFfiInit();
     if (_db == null) {
-      // String path = await getDatabasePath();
-      // print('database path: $path');
+      print('Will fail here');
+      String databasesPath = await databaseFactoryFfi.getDatabasesPath();
+      String path = join(databasesPath, dbName);
+
+      // Making sure the tests start with a clean db.
+      if (await databaseFactoryFfi.databaseExists(path)) {
+        print('database found, deleting ...');
+        await databaseFactoryFfi.deleteDatabase(path);
+      }
+
       _db = await databaseFactoryFfi.openDatabase(
           // await Provider.getCustomDatabasesPath(dbName),
         dbName,
