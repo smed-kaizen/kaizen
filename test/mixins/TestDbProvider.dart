@@ -5,8 +5,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 class TestDbProvider {
   static Database? _db;
 
-  static Future<Database> getDbConnection ({String dbName='kaizen.db'}) async {
-    print({'wtf', _db});
+  static Future<Database> getDbConnection ({String dbName='kaizen_test.db'}) async {
     if (_db == null) {
       // String path = await getDatabasePath();
       // print('database path: $path');

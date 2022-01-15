@@ -17,14 +17,14 @@ class Task {
   Map<String, Object?> toMap() {
     var map = <String, Object?>{
       'name': name,
-      'createdAt': createdAt,
+      'createdAt': createdAt.toIso8601String(),
       'isFavorite': isFavorite? 'TRUE':'FALSE',
     };
     if (id != null) {
       map['id'] = id;
     }
     if (deletedAt != null) {
-      map['deletedAt'] = deletedAt;
+      map['deletedAt'] = deletedAt?.toIso8601String();
     }
     return map;
   }

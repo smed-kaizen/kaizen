@@ -21,7 +21,7 @@ class Todo {
 
   Map<String, Object?> toMap() {
     var map = <String, Object?>{
-      'createdAt': createdAt,
+      'createdAt': createdAt.toIso8601String(),
       'isDone': isDone? 'TRUE':'FALSE',
       'taskId': task.id!,
       'difficultyId': difficulty.id
