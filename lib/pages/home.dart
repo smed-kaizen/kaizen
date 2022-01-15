@@ -112,7 +112,36 @@ void _showAddTaskBottomModal(context) {
   showModalBottomSheet(context: context, builder: (BuildContext bc) {
     return Container(
       height: MediaQuery.of(context).size.height * .60,
-      child: Text('MAMA')
+      child: Form(
+        child: Column(
+          children: [
+            ListTile(
+              title: TextFormField(
+                validator: (value) =>
+                value!.isEmpty ? "You can't have an empty name." : null,
+                onSaved: (value) {
+                  print(value);
+                },
+                decoration: InputDecoration(labelText: 'NAME'),
+              ),
+            ),
+            ListTile(
+              title: RaisedButton(
+                onPressed: () {
+                  // final form = key.currentState;
+                  //
+                  // if (form.validate()) {
+                  //   form.save();
+                  //
+                  //   // ...
+                  // }
+                },
+                child: Text('Submit '),
+              ),
+            )
+          ],
+        ),
+      )
     );
   });
 }

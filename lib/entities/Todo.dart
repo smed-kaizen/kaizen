@@ -24,7 +24,7 @@ class Todo {
       'createdAt': createdAt,
       'isDone': isDone? 'TRUE':'FALSE',
       'taskId': task.id!,
-      'difficultyId': difficulty.id!
+      'difficultyId': difficulty.id
     };
     if (id != null) {
       map['id'] = id;

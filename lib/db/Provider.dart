@@ -13,7 +13,22 @@ const defaultDifficulties = <Map<String, Object>>[
 class Provider {
   static Database? _db;
 
-  static _onCreate (Database db, int version) async {
+  static Future<String> getCustomDatabasesPath (String dbName) async {
+    print({'Creating the custom path for the db:', dbName});
+
+    String databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, '$dbName.db');
+
+    print({'Creating the custom path for the db:', dbName});
+    // Make sure the directory exists
+    try {
+      await Directory(databasesPath).create(recursive: true);
+    } catch (_) {}
+
+    return path;
+  }
+
+  static onCreate (Database db, int version) async {
     print('Creating the database');
     // execute doesn't let you have multiple statements separated with ; so we create
     // multiple execute statements for each table.
@@ -92,28 +107,16 @@ class Provider {
     await batch.commit(noResult: true);
   }
 
-  static Future<String> getDatabasePath () async {
-    String databasesPath = await getDatabasePath();
-    String path = join(databasesPath, 'kaizen.db');
-
-    // Make sure the directory exists
-    try {
-      await Directory(databasesPath).create(recursive: true);
-    } catch (_) {}
-
-    return path;
-  }
-
-  static Future<Database> getDbConnection () async {
+  static Future<Database> getDbConnection ({String dbName='kaizen.db'}) async {
     if (_db == null) {
       // String path = await getDatabasePath();
       // print('database path: $path');
       _db = await openDatabase(
-          'kaizen.db',
+          await getCustomDatabasesPath(dbName),
           version: 1,
-          onCreate: _onCreate,
-          onOpen: (Database db) {
-            print('Database is open');
+          onCreate: onCreate,
+          onOpen: (Database db) async {
+            print({ 'Database open in path: ', db.path });
           }
       );
     }
