@@ -10,6 +10,8 @@ const defaultDifficulties = <Map<String, Object>>[
   {'name': 'legendary', 'pts': 10}
 ];
 
+const defaultExp = { 'exp': 0, 'maxPts': 10 };
+
 /// singleton for the database connection
 class Provider {
   static Database? _db;
@@ -73,65 +75,10 @@ class Provider {
     // Creating the progress Table
     await db.execute('''
       CREATE TABLE IF NOT EXISTS progress (
-        experience INT
+        exp INT,
+        maxPts INT
       )
     ''');
-
-    // You shouldn't be able to update the data that is in the past
-    await db.execute('''
-      CREATE TRIGGER IF NOT EXISTS shouldnt_update_old_data BEFORE UPDATE ON
-      todos FOR EACH ROW WHEN ( OLD.createdAt < strftime('%Y-%m-%d', 'now', 'start of day'))
-      BEGIN
-      	SELECT RAISE (FAIL, 'You can not change the history that is in the past');
-      END
-    ''');
-
-    // You shouldn't be able to delete the data that is in the past
-    await db.execute('''
-      CREATE TRIGGER IF NOT EXISTS shouldnt_delete_old_data BEFORE DELETE ON
-      todos FOR EACH ROW WHEN ( OLD.createdAt < strftime('%Y-%m-%d', 'now', 'start of day'))
-      BEGIN
-      	SELECT RAISE (FAIL, 'You can not delete the history that is in the past');
-      END
-    ''');
-
-    // Can not delete a done todo
-    await db.execute('''
-      CREATE TRIGGER IF NOT EXISTS shouldnt_delete_done_tdodo BEFORE DELETE ON
-      todos FOR EACH ROW WHEN (OLD.isDone = TRUE)
-      BEGIN
-        SELECT RAISE (FAIL, 'This todo is done, to delete it mark it as undone');
-      END
-    ''');
-
-    // Marking a todo as done will add experience of the difficulty
-    // CHECK IF THE UPDATE OF DIFFICULTY CAUSES THE USER TO EXCEED DAILY LIMIT
-    await db.execute('''
-      CREATE TRIGGER IF NOT EXISTS done_todo_adds_exp AFTER UPDATE of isDone ON
-      todos FOR EACH ROW WHEN (old.isDone=FALSE AND new.isDone=TRUE)
-      BEGIN
-        UPDATE progress
-          SET experience = experience + (SELECT pts FROM difficulties WHERE id=OLD.difficultyId);
-      END;
-    ''');
-
-    // Marking a todo as undone will subtract the according experience
-    // CHECK IF THE UPDATE OF DIFFICULTY CAUSES THE USER TO EXCEED DAILY LIMIT
-    await db.execute('''
-      CREATE TRIGGER IF NOT EXISTS done_todo_subtract_exp AFTER UPDATE of isDone ON
-      todos FOR EACH ROW WHEN (old.isDone=TRUE AND new.isDone=FALSE)
-      BEGIN
-        UPDATE progress
-          SET experience = experience - (SELECT pts FROM difficulties WHERE id=OLD.difficultyId);
-      END;
-    ''');
-
-    // Debugging the Triggers created
-    var triggers = await db.rawQuery('''
-      select * from sqlite_master where type = 'trigger'
-    ''');
-
-    CustomLogger.logger.v({'triggers', triggers});
 
     // populate the difficulty data
     Batch batch = db.batch();
@@ -142,6 +89,8 @@ class Provider {
           conflictAlgorithm: ConflictAlgorithm.ignore
       );
     });
+    // initialize the progress to 0
+    batch.insert('progress', defaultExp);
     await batch.commit(noResult: true);
   }
 

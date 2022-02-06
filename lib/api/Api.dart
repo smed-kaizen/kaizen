@@ -1,5 +1,6 @@
 
 import 'package:kaizen/data-access/DifficultyDb.dart';
+import 'package:kaizen/data-access/ProgressDb.dart';
 import 'package:kaizen/data-access/TaskDb.dart';
 import 'package:kaizen/data-access/TodoDb.dart';
 import 'package:kaizen/db/Provider.dart';
@@ -13,6 +14,7 @@ class Api {
   static late TodoDbProvider _todoDbProvider;
   static late TaskDbProvider _taskDbProvider;
   static late DifficultyDbProvider _difficultyDbProvider;
+  static late ProgressDbProvider _progressDbProvider;
   static late TodoController todoController;
   static late TaskController taskController;
   static late DifficultyController difficultyController;
@@ -22,7 +24,8 @@ class Api {
     _todoDbProvider = TodoDbProvider(_db);
     _taskDbProvider = TaskDbProvider(_db);
     _difficultyDbProvider = DifficultyDbProvider(_db);
-    todoController = TodoController(_todoDbProvider, _taskDbProvider);
+    _progressDbProvider = ProgressDbProvider(_db);
+    todoController = TodoController(_todoDbProvider, _taskDbProvider, _progressDbProvider);
     taskController = TaskController(_taskDbProvider);
     difficultyController = DifficultyController(_difficultyDbProvider);
   }
