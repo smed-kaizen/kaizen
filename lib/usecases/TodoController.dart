@@ -24,6 +24,14 @@ class TodoController {
     String? description
   }) async {
     try {
+      // checking how many pts are left
+      Progress progress = await _progressDbProvider.getProgress();
+      int totalPtsToday = await _todoDbProvider.getTotalUsedPtsOfToday();
+      int ptsLeft = progress.maxPts - totalPtsToday;
+      if (ptsLeft < difficulty.pts) {
+        throw new Exception('Not enough pts left');
+      }
+
       // if the user doesn't choose and already existing task
       if (task == null) {
         if (taskName == null) {
