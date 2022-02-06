@@ -1,5 +1,5 @@
 import 'package:kaizen/entities/Difficulty.dart';
-import 'package:kaizen/entities/Task.dart';
+import 'package:kaizen/entities/Progress.dart';
 import 'package:kaizen/entities/Todo.dart';
 import 'package:kaizen/logger/CustomLogger.dart';
 import 'package:sqflite/sqflite.dart';
@@ -64,9 +64,26 @@ void main () {
       expect(todo.isDone, true);
     });
 
-    test('Shouldnt be able to delete a done todo', () async {
-      expect(() => TestApi.todoController.deleteTodo(todo), throwsException);
+    test('Exp should increase after marking the todo as done', () async {
+      Progress progress = await TestApi.progressController.getProgress();
+      expect(progress.exp, todo.difficulty.pts);
     });
 
+    test('Shouldnt be able to delete a done todo', () async {
+      expect(() async => await TestApi.todoController.deleteTodo(todo), throwsException);
+    });
+
+    test('Can mark the todo as not done', () async {
+      expect(() async => await TestApi.todoController.markTodoAsDone(todo, false), returnsNormally);
+    });
+
+    test('The exp should decrease', () async {
+      Progress progress = await TestApi.progressController.getProgress();
+      expect(progress.exp, 0);
+    });
+
+    test('Can delete the todo when it is not done', () async {
+      expect(() async => await TestApi.todoController.deleteTodo(todo), returnsNormally);
+    });
   });
 }
