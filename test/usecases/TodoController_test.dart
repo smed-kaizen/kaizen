@@ -19,11 +19,12 @@ void main () {
   group('Todo Utils:', () {
     const String taskName = 'task1';
     late Todo todo;
-    late Difficulty easyDiff, mediumDiff;
+    late Difficulty easyDiff, mediumDiff, hardDiff;
 
     setUp(() async {
       easyDiff = await TestApi.difficultyController.getDifficultyByName('easy');
       mediumDiff = await TestApi.difficultyController.getDifficultyByName('medium');
+      hardDiff = await TestApi.difficultyController.getDifficultyByName('hard');
     });
 
     Future<void> assertTotalOfUsedPts (int expectedValue) async {
@@ -80,6 +81,10 @@ void main () {
     test('The exp should decrease', () async {
       Progress progress = await TestApi.progressController.getProgress();
       expect(progress.exp, 0);
+    });
+
+    test('Creating a hard difficulty with the easy and medium should throw pts not enough exception', () async {
+      expect(() async => await TestApi.todoController.addTodo(difficulty: hardDiff, taskName: 'hard todo'),  throwsException);
     });
 
     test('Can delete the todo when it is not done', () async {
