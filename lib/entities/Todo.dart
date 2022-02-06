@@ -53,4 +53,10 @@ class Todo {
         pts: map['pts'] as int
     );
   }
+
+  /// Checks whether a todo was in the past or not
+  bool inPast () {
+    DateTime now = DateTime.now();
+    return createdAt.isBefore(DateTime(now.year, now.month, now.day));
+  }
 }
