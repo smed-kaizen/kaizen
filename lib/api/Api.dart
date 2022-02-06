@@ -5,6 +5,7 @@ import 'package:kaizen/data-access/TaskDb.dart';
 import 'package:kaizen/data-access/TodoDb.dart';
 import 'package:kaizen/db/Provider.dart';
 import 'package:kaizen/usecases/DifficultyController.dart';
+import 'package:kaizen/usecases/ProgressController.dart';
 import 'package:kaizen/usecases/TaskController.dart';
 import 'package:kaizen/usecases/TodoController.dart';
 import 'package:sqflite/sqflite.dart';
@@ -18,6 +19,7 @@ class Api {
   static late TodoController todoController;
   static late TaskController taskController;
   static late DifficultyController difficultyController;
+  static late ProgressController progressController;
 
   static init() async {
     _db = await Provider.getDbConnection();
@@ -28,5 +30,6 @@ class Api {
     todoController = TodoController(_todoDbProvider, _taskDbProvider, _progressDbProvider);
     taskController = TaskController(_taskDbProvider);
     difficultyController = DifficultyController(_difficultyDbProvider);
+    progressController = ProgressController(_progressDbProvider);
   }
 }
