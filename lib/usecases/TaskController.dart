@@ -16,4 +16,18 @@ class TaskController {
       throw e;
     }
   }
+
+  Future<Task> getTaskById (int taskId) async {
+    try {
+      return _taskDbProvider.getTaskById(taskId);
+    } catch (e) {
+      CustomLogger.logger.e('Failed to get Task with id $taskId', e);
+      throw e;
+    }
+  }
+
+  /// Finds or creates a task by name. Case insensitive
+  Future<Task> findOrCreateTaskByName(String taskName) async {
+    return _taskDbProvider.findOrCreateTaskByName(taskName);
+  }
 }

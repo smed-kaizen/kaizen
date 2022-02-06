@@ -8,11 +8,20 @@ class DifficultyController {
 
   DifficultyController(this._difficultyDbProvider);
 
-  Future<List<Difficulty>> getDifficulties () async{
+  Future<List<Difficulty>> getDifficulties () {
     try {
       return _difficultyDbProvider.getDifficulties();
     } catch (e) {
       CustomLogger.logger.e('Failed to get difficulties', e);
+      throw e;
+    }
+  }
+
+  Future<Difficulty> getDifficultyByName (String name) {
+    try {
+      return _difficultyDbProvider.getDifficultyByName(name);
+    } catch (e) {
+      CustomLogger.logger.e('Failed to get the difficulty with the name $name', e);
       throw e;
     }
   }
