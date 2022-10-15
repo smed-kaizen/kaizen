@@ -18,12 +18,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/bg_home.jpg'),
-              fit: BoxFit.fitHeight
-          )
-      ),
+      // decoration: BoxDecoration(
+      //     image: DecorationImage(
+      //         image: AssetImage('assets/bg_home.jpg'),
+      //         fit: BoxFit.fitHeight
+      //     )
+      // ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(

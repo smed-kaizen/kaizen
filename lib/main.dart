@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kaizen/api/Api.dart';
 import 'package:kaizen/db/Provider.dart';
-import 'package:kaizen/pages/home.dart';
+import 'package:kaizen/ui/pages/home.dart';
 import 'package:kaizen/pages/loading.dart';
 import 'package:kaizen/pages/settings.dart';
 import 'package:kaizen/pages/stats.dart';
@@ -17,9 +17,9 @@ void main() async {
     initialRoute: '/',
     routes: {
       '/': (context) => Home(),
-      '/settings': (context) => Settings(),
-      '/loading': (context) => Loading(),
-      '/stats': (context) => Stats(),
+      // '/settings': (context) => Settings(),
+      // '/loading': (context) => Loading(),
+      // '/stats': (context) => Stats(),
     },
   ));
 }
